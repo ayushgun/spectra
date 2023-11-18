@@ -10,8 +10,12 @@ import { Camera } from 'expo-camera';
 import { shareAsync } from 'expo-sharing';
 import * as MediaLibrary from 'expo-media-library';
 import { StatusBar } from 'expo-status-bar';
+import { FAB } from 'react-native-paper';
+import { theme } from './core/theme';
 
-export default function Video() {
+
+
+export default function Video({navigation}) {
     let cameraRef = useRef();
     const [hasCameraPermission, setHasCameraPermission] = useState();
     const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState();
@@ -37,6 +41,11 @@ export default function Video() {
     // Camera component
     return (
         <Camera style={styles.container}>
+            <FAB
+            icon="menu"
+            style={styles.fab}
+            onPress={() => navigation.navigate('Settings')}
+            />
             <Text>Future implementation of Toast.</Text>
             <StatusBar style = "auto" />
         </Camera>
@@ -51,4 +60,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    fab: {
+        alignSelf: 'flex-start',
+        left: 20,
+        top: 0,
+        marginBottom: 650,
+        opacity: '1',
+      },
   });
