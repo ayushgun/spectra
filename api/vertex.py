@@ -26,10 +26,12 @@ class VisionClient:
         credentials.refresh(Request())
         return credentials.token
 
-    def generate_description(self, b64_image_uri: str) -> str:
+    def generate_description(self, image_uri: str) -> str:
         """
-        Send an image to Google Cloud Vision API and return the generated description of the image.
+        Send an image URI to Google Cloud Vision API and return the generated description of the image.
         """
+
+        base64_string = image_uri.split(",")[1] if "," in image_uri else image_uri
 
         endpoint = (
             f"https://us-central1-aiplatform.googleapis.com/v1/projects/{self.project_id}"
@@ -40,7 +42,7 @@ class VisionClient:
             "Content-Type": "application/json; charset=utf-8",
         }
         payload = {
-            "instances": [{"image": {"bytesBase64Encoded": b64_image_uri}}],
+            "instances": [{"image": {"bytesBase64Encoded": base64_string}}],
             "parameters": {"sampleCount": 1, "language": "EN"},
         }
 
