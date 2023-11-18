@@ -7,11 +7,27 @@ import Button from './components/Button';
 import { SafeAreaView, StyleSheet } from 'react-native';
 import { SegmentedButtons } from 'react-native-paper';
 import { theme } from './core/theme';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Welcome = ({navigation}) => {
 
-    const [value, setValue] = React.useState('');
-    const [email, setEmail] = React.useState('');
+    const [voice, setVoice] = React.useState('');
+    const [phrase, setPhrase] = React.useState('');
+
+    const storeData = async (key, value) => {
+        try {
+          await AsyncStorage.setItem(key, value);
+        } catch (error) {
+          console.error('Error storing data:', error);
+        }
+      };
+
+      const handleSignUp = async () => {
+        storeData('phrase', phrase);
+        storeData('voice', voice);
+        console.log('Data stored');
+        navigation.navigate('Video');
+    };
 
 return (
 
@@ -21,8 +37,9 @@ return (
       Set your action phrase to activate Spectra.
     </Paragraph>
     <TextInput
-    value={email.valueOf()}
-    onChangeText={text => setEmail({ value: text, error: '' })}
+    label= "Action Phrase"
+    value={phrase}
+    onChangeText={phrase => setPhrase(phrase)}
     />
 
     <Header>Voice Style</Header>
@@ -30,8 +47,8 @@ return (
       Choose a voice style for Spectra.
     </Paragraph>
       <SegmentedButtons style={styles.SegmentedButtons}
-        value={value}
-        onValueChange={setValue}
+        value={voice}
+        onValueChange={setVoice}
         buttons={[
           {
             value: 'male',
@@ -45,7 +62,7 @@ return (
         ]}
       />
 
-      <Button mode="outlined" onPress={() => navigation.navigate('Settings')}>
+      <Button mode="outlined" onPress={() => handleSignUp()}>
       Continue to Video
     </Button>
   </Background>
