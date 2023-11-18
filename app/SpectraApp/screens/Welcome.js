@@ -1,28 +1,21 @@
-import * as React from 'react';
-import { Text } from 'react-native-paper';
+import React, { memo } from 'react';
+import Background from './components/Background';
+import Logo from './components/Logo';
+import Header from './components/Header';
+import Paragraph from './components/Paragraph';
+import Button from './components/Button';
 
-const Welcome = () => (
-  <>
-    <Text variant="displayLarge">Display Large</Text>
-    <Text variant="displayMedium">Display Medium</Text>
-    <Text variant="displaySmall">Display small</Text>
-
-    <Text variant="headlineLarge">Headline Large</Text>
-    <Text variant="headlineMedium">Headline Medium</Text>
-    <Text variant="headlineSmall">Headline Small</Text>
-
-    <Text variant="titleLarge">Title Large</Text>
-    <Text variant="titleMedium">Title Medium</Text>
-    <Text variant="titleSmall">Title Small</Text>
-
-    <Text variant="bodyLarge">Body Large</Text>
-    <Text variant="bodyMedium">Body Medium</Text>
-    <Text variant="bodySmall">Body Small</Text>
-
-    <Text variant="labelLarge">Label Large</Text>
-    <Text variant="labelMedium">Label Medium</Text>
-    <Text variant="labelSmall">Label Small</Text>
- </>
+const Welcome = ({navigation}) => (
+  <Background>
+    <Logo/>
+    <Header>Vision for All</Header>
+    <Paragraph>
+      Navigate with confidence and detect dangers in your path.
+    </Paragraph>
+    <Button mode="outlined" onPress={() => navigation.navigate('Settings')}>
+      Welcome to Spectra
+    </Button>
+  </Background>
 );
 
 export default Welcome;

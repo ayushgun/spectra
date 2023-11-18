@@ -15,12 +15,13 @@ export default function App() {
   return (
     <PaperProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Welcome" >
+        <Stack.Navigator initialRouteName="Welcome" screenOptions ={() => ({headerShown: false})}>
           <Stack.Screen name="Settings" component={Settings}  />
           <Stack.Screen name="Video" component={Video} />
           <Stack.Screen name="Welcome" component={Welcome} />
         </Stack.Navigator>
       </NavigationContainer> 
+      <StatusBar style="auto" />
     </PaperProvider>
   );
 }
