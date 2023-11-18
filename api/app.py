@@ -1,36 +1,51 @@
-import base64
-from io import BytesIO
+import json
 from pathlib import Path
 
+import requests
+from google.auth.transport.requests import Request
+from google.oauth2 import service_account
 from litestar import Litestar, get
-from PIL import Image
 from redis import Redis
 
-
-class Object:
-    def __init__(self, object_name: str) -> None:
-        self.name = object_name
-
-    def generate_caption() -> str:
-        # TODO: Call Claude/OpenAI/Google API to generate image caption
-        pass
+import base64
 
 
-class CameraFrame:
-    def __init__(self, image_uri: str):
-        self.image = self.decode_image_uri(image_uri)
+class VisionClient:
+    def __init__(self, gc_project_id: str, gc_service_account_key: Path) -> None:
+        self.project_id = gc_project_id
 
-    def decode_image_uri(self, base64_image_uri: str) -> Image.Image:
-        encoded_data = base64_image_uri.split(",")[1]
-        image_data = base64.b64decode(encoded_data)
-        image = Image.open(BytesIO(image_data))
-        return image
+        with open(gc_service_account_key, "r") as file:
+            self.service_account_info = json.load(file)
 
-    def detect_objects(self) -> list[str]:
-        pass
+    def refresh_access_token(self) -> str:
+        credentials = service_account.Credentials.from_service_account_info(
+            self.service_account_info,
+            scopes=["https://www.googleapis.com/auth/cloud-platform"],
+        )
 
-    def save_locally(self, file_name: Path) -> None:
-        self.image.save(file_name)
+        credentials.refresh(Request())
+        return credentials.token
+
+    def generate_description(self, b64_image_uri: str) -> str:
+        endpoint = (
+            f"https://us-central1-aiplatform.googleapis.com/v1/projects/{self.project_id}"
+            + "/locations/us-central1/publishers/google/models/imagetext:predict"
+        )
+        headers = {
+            "Authorization": f"Bearer {self.refresh_access_token()}",
+            "Content-Type": "application/json; charset=utf-8",
+        }
+        payload = {
+            "instances": [{"image": {"bytesBase64Encoded": b64_image_uri}}],
+            "parameters": {"sampleCount": 1, "language": "EN"},
+        }
+
+        response = requests.post(endpoint, headers=headers, json=payload)
+
+        if response.status_code != 200:
+            raise requests.exceptions.HTTPError(response.json())
+
+        return response.json()["predictions"][0]
 
 
 @get("/")
@@ -39,8 +54,13 @@ async def index() -> str:
 
 
 def main():
-    r = Redis(host="localhost", port=6379, db=0)
-    app = Litestar([index])
+    # r = Redis(host="localhost", port=6379, db=0)
+    # app = Litestar([index])
+    client = VisionClient("vision-405423", "gcloud_key.json")
+
+    with open("city.jpg", "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read())
+        print(client.generate_description(encoded_string.decode("utf-8")))
 
 
 if __name__ == "__main__":

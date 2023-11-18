@@ -1,4 +1,5 @@
 .DS_Store
+gcloud_key.json
 *.png
 
 # Byte-compiled / optimized / DLL files
