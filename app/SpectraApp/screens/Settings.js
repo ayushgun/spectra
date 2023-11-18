@@ -63,7 +63,7 @@ return (
       />
 
       <Button mode="outlined" onPress={() => handleSignUp()}>
-      Continue to Video
+      Go to Video
     </Button>
   </Background>
     );

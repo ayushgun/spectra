@@ -11,7 +11,7 @@ const TextInput = ({ errorText, children, ...props }) => (
       selectionColor={theme.colors.primary}
       underlineColor="transparent"
       mode="outlined"
-      placeholder= {'Ex. Hey Spectra!'}
+      placeholder= {"Ex: Spectra, what's going on?"}
       {...props}
     />
     {errorText ? <Text style={styles.error}>{errorText}</Text> : null}
