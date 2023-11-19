@@ -1,10 +1,12 @@
 import argparse
 import base64
-from pprint import pprint
+import os
 
-import requests
+from eyesight import Snapshot, Tourguide
 
-import ai
+Snapshot.gc_project_id = "spectra-405610"
+Snapshot.gc_service_key_file = "keys/service_account_caption.json"
+guide = Tourguide("keys/palm_key.json")
 
 
 def image_to_base64(file_path):
@@ -21,12 +23,13 @@ def main():
     args = parser.parse_args()
 
     b64 = image_to_base64(args.file_path)
-    res = requests.post("http://127.0.0.1:8000/snapshot/describe", json={"uri": b64})
+    os.system(f"kitten icat {args.file_path}")
+    snapshot = Snapshot(b64)
 
-    if res.status_code == 204:
-        pprint("Image deemed safe")
-    elif res.status_code == 200:
-        pprint(res.json()["response"])
+    if snapshot.has_hazard():
+        print(guide.generate_contextual_description(snapshot))
+    else:
+        print("No harmful objects detected")
 
 
 if __name__ == "__main__":

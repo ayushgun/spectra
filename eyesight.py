@@ -129,4 +129,8 @@ class Tourguide:
 
         prompt = self.fill_template_prompt(frame.generate_description())
         response = palm.chat(messages=[prompt])
+
+        if not response:
+            raise RuntimeError("Unable to generate contex-aware description")
+
         return f"{'. '.join(response.last.split('. ')[:2])}."

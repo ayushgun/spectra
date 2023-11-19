@@ -1,6 +1,7 @@
 .DS_Store
 keys/
 samples/
+*.mp3
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
