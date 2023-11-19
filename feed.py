@@ -36,7 +36,8 @@ def process_frame(image_uri, result_queue):
     tts_message = TTSMessage(description)
     tts_message.to_audio("output.mp3", gender=VoiceGender.FEMALE)
 
-    os.system("afplay output.mp3")
+    if description != "No harmful objects detected":
+        os.system("afplay output.mp3")
 
 
 def start_webcam_feed():
@@ -44,9 +45,6 @@ def start_webcam_feed():
     last_processed_time = time.time()
     result_queue = Queue()
     current_process = None
-
-    if not webcam.isOpened():
-        raise IOError("Unable to open webcam feed due to improper webcam ID")
 
     while True:
         successful_read, current_frame = webcam.read()
