@@ -44,7 +44,7 @@ class Eyesight:
 
     def refresh_access_token(self) -> str:
         """
-        Refresh and return the Google Cloud API access token using the service account credentials.
+        Refresh and return the Google Cloud API access token using the account credentials.
         """
 
         credentials = service_account.Credentials.from_service_account_info(
@@ -57,7 +57,7 @@ class Eyesight:
 
     def generate_description(self, image_uri: str) -> str:
         """
-        Send an image URI to Google Cloud Vision API and return the generated description of the image.
+        Send an image URI to Google Cloud Vision API and return the generated description.
         """
 
         base64_string = image_uri.split(",")[1] if "," in image_uri else image_uri
