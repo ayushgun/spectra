@@ -4,7 +4,7 @@ import {
     StyleSheet,
     View,
   } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Text, Button } from 'react-native-paper';
 import { useEffect, useRef, useState } from 'react';
 import { Camera } from 'expo-camera';
 import { shareAsync } from 'expo-sharing';
@@ -12,6 +12,8 @@ import * as MediaLibrary from 'expo-media-library';
 import { StatusBar } from 'expo-status-bar';
 import { FAB } from 'react-native-paper';
 import { theme } from './core/theme';
+import Toast, { DURATION } from 'react-native-easy-toast';
+
 
 
 
@@ -40,15 +42,38 @@ export default function Video({navigation}) {
 
     // Camera component
     return (
+
         <Camera style={styles.container}>
+            <Toast ref={(toast) => this.toast = toast}
+            style={{backgroundColor: theme.colors.surface}}
+            textStyle = {{color: 'black'}}
+            position = 'top'
+            />
             <FAB
             icon="menu"
             style={styles.fab}
-            onPress={() => navigation.navigate('Settings')}
+            backgroundColor = {theme.colors.surface}
+            onPress={() => {
+                navigation.navigate('Settings')
+
+            }
+            }
             />
-            <Text>Future implementation of Toast.</Text>
+            <Button mode="contained-tonal"
+            onPress={() => { 
+                this.toast.show('there is a hole in the ground two feet away! proceed carefully and be aware of any uneven ground.', 7500);
+                }
+            }
+            style = {styles.button}> Tell me about my environment.
+            
+            </Button>
+
             <StatusBar style = "auto" />
         </Camera>
+
+        
+        
+        
     );
 
 }
@@ -64,7 +89,14 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start',
         left: 20,
         top: 0,
-        marginBottom: 650,
+        marginBottom: 620,
         opacity: '1',
       },
+    button: {
+        marginBottom: -30,
+        width: '90%',
+        height: '9%',
+        justifyContent: 'center',
+        backgroundColor: theme.colors.surface
+    },
   });
