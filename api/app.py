@@ -1,9 +1,11 @@
 from litestar import Litestar, get, post
 from redis import Redis
 
-from vertex import VisionClient
+from llm import Eyesight, Tourguide
 
-vision = VisionClient("vision-405423", "gcloud_key.json")
+eyesight = Eyesight("vision-405423", "keys/service_account.json")
+guide = Tourguide("keys/palm_key.json")
+
 redis = Redis(host="localhost", port=6379, db=0)
 
 
@@ -13,12 +15,10 @@ async def index() -> str:
 
 
 @post("/snapshot/describe")
-async def snapshot_description(data: dict[str, str]) -> str:
-    caption = vision.generate_description(data["uri"])
-
-    # Generate nuanced caption using base caption
-
-    return caption
+async def snapshot_description(data: dict[str, str]) -> dict[str, str]:
+    caption = eyesight.generate_description(data["uri"])
+    guidance = guide.rewrite_description(caption)
+    return {"response": guidance}
 
 
 app = Litestar([index, snapshot_description])
