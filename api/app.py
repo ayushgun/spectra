@@ -1,12 +1,17 @@
 from litestar import Litestar, get, post
-from redis import Redis
+from functools import lru_cache
 
 from llm import Eyesight, Tourguide
 
 eyesight = Eyesight("vision-405423", "keys/service_account.json")
 guide = Tourguide("keys/palm_key.json")
 
-redis = Redis(host="localhost", port=6379, db=0)
+
+@lru_cache(maxsize=128)
+def get_cached_description(uri: str) -> str:
+    caption = eyesight.generate_description(uri)
+    guidance = guide.rewrite_description(caption)
+    return guidance
 
 
 @get("/")
@@ -16,8 +21,7 @@ async def index() -> str:
 
 @post("/snapshot/describe")
 async def snapshot_description(data: dict[str, str]) -> dict[str, str]:
-    caption = eyesight.generate_description(data["uri"])
-    guidance = guide.rewrite_description(caption)
+    guidance = get_cached_description(data["uri"])
     return {"response": guidance}
 
 
