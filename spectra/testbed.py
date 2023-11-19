@@ -5,8 +5,8 @@ import os
 from eyesight import Snapshot, Tourguide
 
 Snapshot.gc_project_id = "spectra-405610"
-Snapshot.gc_service_key_file = "keys/service_account_caption.json"
-guide = Tourguide("keys/palm_key.json")
+Snapshot.gc_service_key_file = "../keys/service_account_caption.json"
+guide = Tourguide("../keys/palm_key.json")
 
 
 def image_to_base64(file_path):

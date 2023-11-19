@@ -12,10 +12,10 @@ from speech import TTSMessage, VoiceGender
 # Set initial configuration variables
 Snapshot.gc_project_id = "spectra-405610"
 TTSMessage.gc_project_id = "spectra-405610"
-Snapshot.gc_service_key_file = "keys/service_account_caption.json"
-TTSMessage.gc_service_key_file = "keys/service_account_audio.json"
+Snapshot.gc_service_key_file = "../keys/service_account_caption.json"
+TTSMessage.gc_service_key_file = "../keys/service_account_audio.json"
 
-guide = Tourguide("keys/palm_key.json")
+guide = Tourguide("../keys/palm_key.json")
 ESC = 27
 
 
@@ -23,7 +23,7 @@ ESC = 27
 def get_cached_description(uri: str) -> str:
     image_frame = Snapshot(uri)
 
-    if image_frame.has_hazard():
+    if not image_frame.has_hazard():
         return guide.generate_contextual_description(image_frame)
 
     return "No harmful objects detected"
@@ -33,11 +33,12 @@ def process_frame(image_uri, result_queue):
     description = get_cached_description(image_uri)
     result_queue.put(description)
 
+    if description == "No harmful objects detected":
+        return
+
     tts_message = TTSMessage(description)
     tts_message.to_audio("output.mp3", gender=VoiceGender.FEMALE)
-
-    if description != "No harmful objects detected":
-        os.system("afplay output.mp3")
+    os.system("afplay output.mp3")
 
 
 def start_webcam_feed():

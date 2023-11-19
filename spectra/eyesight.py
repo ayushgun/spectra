@@ -96,7 +96,7 @@ class Snapshot:
 
 
 class Tourguide:
-    def __init__(self, palm_api_key_file) -> None:
+    def __init__(self, palm_api_key_file: Path) -> None:
         with open(palm_api_key_file, "r") as file:
             key_file = json.load(file)
             palm.configure(api_key=key_file["api_key"])
