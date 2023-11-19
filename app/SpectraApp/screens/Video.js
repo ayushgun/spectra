@@ -65,6 +65,6 @@ const styles = StyleSheet.create({
         left: 20,
         top: 0,
         marginBottom: 650,
-        opacity: '1',
+        opacity: 1,
       },
   });

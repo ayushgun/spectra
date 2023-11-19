@@ -22,25 +22,47 @@
           "savePhotosPermission": "Allow $(SpectraApp) to save photos.",
           "isAccessMediaLocationEnabled": "true"
         }
+      ],
+      [
+        "react-native-vision-camera",
+        {
+          "cameraPermissionText": "$(PRODUCT_NAME) needs access to your Camera.",
+          "enableMicrophonePermission": true,
+          "microphonePermissionText": "$(PRODUCT_NAME) needs access to your Microphone."
+        }
       ]
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Allow $(SpectraApp) to access your photos.",
+        "NSPhotoLibraryAddUsageDescription": "Allow $(SpectraApp) to save photos.",
+        "NSCameraUsageDescription": "$(PRODUCT_NAME) needs access to your Camera.",
+        "NSMicrophoneUsageDescription": "$(PRODUCT_NAME) needs access to your Microphone."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.ACCESS_MEDIA_LOCATION",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.jackhao.spectra"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "owner": "jackhao",
     "extra": {
       "eas": {
-        "projectId": "0d1d4d34-89dd-4f0b-ab70-146e3b276eb3"
+        "projectId": "ebdde445-8b49-4f05-ae52-6529e57ffd04"
       }
-    },
-    "owner": "msubhash"
+    }
   }
 }

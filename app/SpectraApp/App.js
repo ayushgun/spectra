@@ -6,6 +6,7 @@ import { PaperProvider } from 'react-native-paper';
 import Settings from "./screens/Settings";
 import Welcome from "./screens/Welcome";
 import Video from "./screens/Video";
+import Video2 from "./screens/Video2";
 
 
 
@@ -17,7 +18,7 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Welcome" screenOptions ={() => ({headerShown: false})}>
           <Stack.Screen name="Settings" component={Settings}  />
-          <Stack.Screen name="Video" component={Video} />
+          <Stack.Screen name="Video" component={Video2} />
           <Stack.Screen name="Welcome" component={Welcome} />
         </Stack.Navigator>
       </NavigationContainer> 
