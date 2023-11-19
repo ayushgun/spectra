@@ -12,6 +12,8 @@ import * as MediaLibrary from 'expo-media-library';
 import { StatusBar } from 'expo-status-bar';
 import { FAB } from 'react-native-paper';
 import { theme } from './core/theme';
+import { Audio } from 'expo-av';
+import {Button} from 'react-native'
 
 
 
@@ -19,7 +21,40 @@ export default function Video({navigation}) {
     let cameraRef = useRef();
     const [hasCameraPermission, setHasCameraPermission] = useState();
     const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState();
+    const [recording, setRecording] = React.useState();
 
+    async function startRecording() {
+      try {
+        console.log('Requesting permissions..');
+        await Audio.requestPermissionsAsync();
+        await Audio.setAudioModeAsync({
+          allowsRecordingIOS: true,
+          playsInSilentModeIOS: true,
+        });
+  
+        console.log('Starting recording..');
+        const { recording } = await Audio.Recording.createAsync( Audio.RecordingOptionsPresets.HIGH_QUALITY
+        );
+        setRecording(recording);
+        console.log('Recording started');
+      } catch (err) {
+        console.error('Failed to start recording', err);
+      }
+    }
+  
+    async function stopRecording() {
+      console.log('Stopping recording..');
+      setRecording(undefined);
+      await recording.stopAndUnloadAsync();
+      await Audio.setAudioModeAsync(
+        {
+          allowsRecordingIOS: false,
+        }
+      );
+      const uri = recording.getURI();
+      console.log('Recording stopped and stored at', uri);
+    }
+  
 
     // Taking permissions for camera/media library usage
     useEffect(() => {
@@ -46,6 +81,10 @@ export default function Video({navigation}) {
             style={styles.fab}
             onPress={() => navigation.navigate('Settings')}
             />
+            <Button
+        title={recording ? 'Stop Recording' : 'Start Recording'}
+        onPress={recording ? stopRecording : startRecording}
+      />
             <Text>Future implementation of Toast.</Text>
             <StatusBar style = "auto" />
         </Camera>
