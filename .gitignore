@@ -1,6 +1,6 @@
 .DS_Store
-gcloud_key.json
-*.png
+keys/
+samples/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
