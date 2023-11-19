@@ -15,7 +15,11 @@
     "preview": {
       "distribution": "internal"
     },
-    "production": {}
+    "production": {
+      "android": {
+        "image": "jdk-8.0.392.8-hotspot"
+      }
+    }
   },
   "submit": {
     "production": {}

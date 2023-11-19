@@ -11,7 +11,7 @@ import { shareAsync } from 'expo-sharing';
 import * as MediaLibrary from 'expo-media-library';
 import { StatusBar } from 'expo-status-bar';
 import { FAB } from 'react-native-paper';
-import { theme } from './core/theme';
+import { theme } from '../core/theme';
 
 
 

@@ -7,8 +7,7 @@ import Settings from "./screens/Settings";
 import Welcome from "./screens/Welcome";
 import Video from "./screens/Video";
 import Video2 from "./screens/Video2";
-
-
+import 'react-native-reanimated'
 
 const Stack = createNativeStackNavigator();
 
