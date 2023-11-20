@@ -1,3 +1,3 @@
 # Spectra 🔍
 
-Spectra is an AI-powered mobile app for assisting visually impaired individuals with daily navigation.
+Spectra is an AI-powered application for assisting visually impaired individuals with daily navigation.
