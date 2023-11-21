@@ -8,7 +8,7 @@ from google.auth.transport.requests import Request
 from google.oauth2 import service_account
 
 
-class VoiceGender(Enum):
+class TTSVoice(Enum):
     MALE = auto()
     FEMALE = auto()
 
@@ -43,7 +43,7 @@ class TTSMessage:
         with open(filename, "wb") as audio_file:
             audio_file.write(audio_data)
 
-    def to_audio(self, filename: str, gender: VoiceGender) -> None:
+    def to_audio(self, filename: str, gender: TTSVoice) -> None:
         endpoint = "https://texttospeech.googleapis.com/v1/text:synthesize"
         headers = {
             "Authorization": f"Bearer {self.refresh_access_token()}",
@@ -53,7 +53,7 @@ class TTSMessage:
             "input": {"text": self.text},
             "voice": {
                 "languageCode": "en-US",
-                "name": "en-US-Studio-" + ("M" if gender == VoiceGender.MALE else "O"),
+                "name": "en-US-Studio-" + ("M" if gender == TTSVoice.MALE else "O"),
             },
             "audioConfig": {"audioEncoding": "MP3", "speakingRate": 1.4},
         }

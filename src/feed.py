@@ -7,7 +7,7 @@ from multiprocessing import Process, Queue
 import cv2
 
 from eyesight import Snapshot, Tourguide
-from speech import TTSMessage, VoiceGender
+from speech import TTSMessage, TTSVoice
 
 # Set initial configuration variables
 Snapshot.gc_project_id = "spectra-405610"
@@ -20,28 +20,26 @@ ESC = 27
 
 
 @lru_cache(maxsize=128)
-def get_cached_description(uri: str) -> str:
+def get_cached_description(uri: str) -> tuple[bool, str]:
     image_frame = Snapshot(uri)
 
-    if not image_frame.has_hazard():
-        return guide.generate_contextual_description(image_frame)
+    if image_frame.has_hazard():
+        return (True, guide.generate_contextual_description(image_frame))
 
-    return "No harmful objects detected"
+    return (False, "No harmful objects detected")
 
 
 def process_frame(image_uri, result_queue):
-    description = get_cached_description(image_uri)
-    result_queue.put(description)
+    has_hazard, description = get_cached_description(image_uri)
+    result_queue.put((has_hazard, description))
 
-    if description == "No harmful objects detected":
-        return
-
-    tts_message = TTSMessage(description)
-    tts_message.to_audio("output.mp3", gender=VoiceGender.FEMALE)
-    os.system("afplay output.mp3")
+    if has_hazard:
+        tts_message = TTSMessage(description)
+        tts_message.to_audio("output.mp3", gender=TTSVoice.FEMALE)
+        os.system("afplay output.mp3")
 
 
-def start_webcam_feed():
+def start_webcam_feed() -> None:
     webcam = cv2.VideoCapture(1)
     last_processed_time = time.time()
     result_queue = Queue()
@@ -54,7 +52,7 @@ def start_webcam_feed():
 
         cv2.imshow("Spectra Mobile", current_frame)
 
-        if time.time() - last_processed_time >= 15:
+        if time.time() - last_processed_time >= 5:
             if current_process is None or not current_process.is_alive():
                 success, encoded_image = cv2.imencode(".jpg", current_frame)
                 if not success:
@@ -70,8 +68,9 @@ def start_webcam_feed():
                 last_processed_time = time.time()
 
         if not result_queue.empty():
-            description = result_queue.get()
-            print(description)
+            has_hazard, description = result_queue.get()
+            if has_hazard:
+                print(description)
 
         if cv2.waitKey(1) == ESC:
             if current_process is not None:
